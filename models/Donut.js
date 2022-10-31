@@ -8,5 +8,4 @@ const donutSchema = new mongoose.Schema({
 })
 
 const Donut = mongoose.model('Donut', donutSchema);
-
 module.exports = Donut;
