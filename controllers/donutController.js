@@ -1,33 +1,12 @@
 const Donut = require('../models/donut');
 
 const getAll = (req, res, next) => {
-    // Donut.find({}, (err, donuts) => {
-    //     if (err) {
-    //     res.status(404).json({ error: err });
-    //     }
-    //     res.status(200).json(donuts);
-    // });
-
-    res.json({
-        message: 'Donuts retrieved',
-        donuts: [
-            {
-                id: 1,
-                name: 'Chocolate',
-                frosting: 'Chocolate',
-                sprinkles: 'Chocolate',
-                base: 'Chocolate'
-            },
-            {
-                id: 2,
-                name: 'Vanilla',
-                frosting: 'Vanilla',
-                sprinkles: 'Vanilla',
-                base: 'Vanilla'
-            },
-        ]
+    Donut.find({}, (err, donuts) => {
+        if (err) {
+            res.status(404).json({ status: "failed", message: "Something has gone wrong.", error: err });
+        }
+        res.status(200).json(donuts);
     });
-
 };
 
 const getOne = (req, res, next) => {
