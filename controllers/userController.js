@@ -1,4 +1,5 @@
 const User = require('../models/Users');
+const bcrypt = require('bcrypt');
 
 // GET all users
 const getAll = (req, res) => {
