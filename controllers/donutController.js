@@ -1,4 +1,4 @@
-const Donut = require('../models/donut');
+const Donut = require('../models/Donut');
 
 // Get all donuts (possible sorting by name, base, frosting, sprinkles, votes, dfateCreated)
 const getAll = (req, res, next) => {
