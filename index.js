@@ -10,8 +10,8 @@ require('dotenv').config();
 
 // Define the routes to the correct files
 const donutRouter = require('./routes/api/v1/donuts');
+const usersRouter = require('./routes/api/v1/users');
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 
 const app = express();
 
@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Configure routes
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/donuts', donutRouter);
 
 // Connect to the database
