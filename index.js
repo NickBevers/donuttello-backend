@@ -29,6 +29,6 @@ app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/donuts', donutRouter);
 
 // Connect to the database
-mongoose.connect(process.env.DB_CONN, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(process.env.DB_CONN, {useNewUrlParser: true, useUnifiedTopology: true, dbName: process.env.DB_NAME});
 
 module.exports = app;
