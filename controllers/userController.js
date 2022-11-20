@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // GET all users
 const getAll = (req, res) => {
@@ -102,9 +103,10 @@ const login = (req, res) => {
                 res.status(404).json({ status: "failed", message: "Something has gone wrong.", devMessage: "Something went wrong comparing the password", error: err });
             }
             if (isMatch) {
-                res.status(200).json({ status: "success", message: "Login successful.", data: user });
+                const jwtToken = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
+                res.status(200).json({ status: "success", message: "Login successful.", data: user, token: jwtToken });
             } else {
-                res.status(404).json({ status: "failed", message: "Password incorrect.", devMessage: "Password incorrect." });
+                res.status(404).json({ status: "failed", message: "Password incorrect.", devMessage: "Password the user gave is incorrect." });
             }
         });
     });
