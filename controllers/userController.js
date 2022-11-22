@@ -1,3 +1,4 @@
+// Define imports
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -32,7 +33,7 @@ const getOne = (req, res) => {
     });
 };
 
-// POST create user
+// POST create user (only for development as users will be static)
 const create = (req, res) => {
     const { firstname, lastname, email, password } = req.body;
     
@@ -82,7 +83,7 @@ const create = (req, res) => {
     });
 };
 
-// POST login user
+// POST login user (admin panel/section only)
 const login = (req, res) => {
     const { email, password } = req.body;
 
@@ -112,7 +113,7 @@ const login = (req, res) => {
     });
 };
 
-// DELETE remove user
+// DELETE remove user (only for development as users will be static and probably will not change often)
 const remove = (req, res) => {
     const { id } = req.params;
 

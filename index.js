@@ -1,4 +1,6 @@
+// Define imports 
 const express = require('express');
+const app = express();
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -13,7 +15,6 @@ const donutRouter = require('./routes/api/v1/donuts');
 const usersRouter = require('./routes/api/v1/users');
 const indexRouter = require('./routes/index');
 
-const app = express();
 
 // Setup extra settings for express
 app.use(cors());
