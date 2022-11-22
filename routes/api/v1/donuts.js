@@ -2,19 +2,21 @@
 const express = require('express');
 const router = express.Router();
 const donutController = require('../../../controllers/donutController');
-import authenticate from '../../../middleware/authenticate';
+const authenticate = require('../../../middleware/authenticate');
 
-/* GET donuts */
+// GET all donuts (only for admin with correct token)
 router.get('/', authenticate, donutController.getAll);
+
+// GET a single donut by id
 router.get('/:id', donutController.getOne);
 
-/* POST new donut */
+// POST a new donut
 router.post('/', donutController.create);
 
-/* PUT update donut */
+// PUT (update) a donut
 router.put('/:id', donutController.update);
 
-/* DELETE donut */
-router.delete('/:id', donutController.remove);
+// DELETE a donut (only for admin with correct token)
+router.delete('/:id', authenticate, donutController.remove);
 
 module.exports = router;

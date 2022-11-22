@@ -5,6 +5,9 @@ const jwt = require("jsonwebtoken");
 module.exports = (req, res, next) => {
     // Get the token from the request header
     const jwtToken = req.headers.authorization.split(" ")[1];
+    if (!jwtToken) {
+        return res.status(401).json({ status: "failed", message: "Unauthorized" });
+    }
 
     // Verify the token with built in jwt.verify() method 
     jwt.verify(jwtToken, process.env.JWT_SECRET, (err, decoded) => {
@@ -14,7 +17,6 @@ module.exports = (req, res, next) => {
 
         // If the token is valid, add the decoded token to the request object
         req.userData = decoded;
-        res.status(200).json({ status: "success", message: "You are authorized to perform this action.", data: decoded });
     });
     
     // Call next() to continue with the request
