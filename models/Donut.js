@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const donutSchema = new mongoose.Schema({
     base: {type: String, required: true},
     frosting: {type: String, required: true},
-    sprinkles: {type: String, required: true},
+    toppings: {type: String, required: true},
     name: {type: String, required: false},
     email: {type: String, required: true},
     hasBeenProduced: { type: Boolean, default: false, required: false },

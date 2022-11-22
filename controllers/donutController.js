@@ -46,7 +46,9 @@ const create = (req, res, next) => {
         if (err) {
             res.status(404).json({ status: "failed", message: "Something has gone wrong.", error: err });
         }
-        res.status(200).json({ status: "success", message: `You created a donut called "${donut.name}".`, data: donut, donutCount: donut.length });
+        
+        // Send the new donut back to the client with the url to get the donut data
+        res.status(200).json({ status: "success", message: `You created a donut called ${donut.name}.`, data: donut, donutCount: donut.length, url: `${req.protocol}://${req.get('host')}${req.baseUrl}/${donut._id}` });
     });
 };
 

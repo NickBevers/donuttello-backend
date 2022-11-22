@@ -12,6 +12,7 @@ require('dotenv').config();
 
 // Define the routes to the correct files
 const donutRouter = require('./routes/api/v1/donuts');
+const donutController = require('./controllers/donutController');
 const usersRouter = require('./routes/api/v1/users');
 const indexRouter = require('./routes/index');
 
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/donuts', donutRouter);
+app.get('/donuts/:id', donutController.getOne);
 
 // Connect to the database
 mongoose.connect(process.env.DB_CONN, {useNewUrlParser: true, useUnifiedTopology: true, dbName: process.env.DB_NAME});
