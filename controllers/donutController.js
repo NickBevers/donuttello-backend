@@ -26,13 +26,14 @@ const getAll = (req, res, next) => {
         if (err) {
             res.status(404).json({ status: "failed", message: "Something has gone wrong.", error: err });
         }
-        res.status(200).json({ status: "success", message: "All donuts retrieved.", data: donuts, donutCount: donuts.length });
+        res.status(200).json({ status: "success", message: "Got all donuts.", data: donuts, donutCount: donuts.length });
     }).sort(sortBy);
 };
 
 // Get a single donut by id
 const getOne = (req, res, next) => {
     Donut.findById(req.params.id, (err, donut) => {
+        console.log(donut);
         if (err) {
             res.status(404).json({ status: "failed", message: "Something has gone wrong.", error: err });
         }
