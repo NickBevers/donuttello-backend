@@ -9,6 +9,7 @@ const donutSchema = new mongoose.Schema({
     name: {type: String, required: false},
     email: {type: String, required: true},
     hasBeenProduced: { type: Boolean, default: false, required: false },
+    isOrder: { type: Boolean, default: true, required: true },
     votes: { type: Number, default: 0, required: false },
     dateCreated: { type: Date, default: Date.now, required: false }
 })
