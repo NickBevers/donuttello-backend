@@ -111,7 +111,7 @@ const login = (req, res) => {
     }
 
     // Get the user with the email
-    User.findOne({ email }, { _id: 0, password: 0, date: 0 }, (err, user) => {
+    User.findOne({ email }, { _id: 0, date: 0 }, (err, user) => {
         // If there is an error, return the error
         if (err) {
             res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong looking for the user in the database (login error)", error: err });
