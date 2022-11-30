@@ -7,6 +7,7 @@ const donutSchema = new mongoose.Schema({
     frosting: {type: String, required: true},
     toppings: {type: String, required: true},
     name: {type: String, required: false},
+    company: {type: String, required: true},
     email: {type: String, required: true},
     hasBeenProduced: { type: Boolean, default: false, required: false },
     isOrder: { type: Boolean, default: true, required: true },
