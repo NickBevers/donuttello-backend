@@ -212,6 +212,11 @@ const resetPassword = (req, res) => {
         });
     });
 };
+
+const authenticate = (req, res) => {
+    return res.status(200).json({ status: "success", message: "You are authenticated." });
+};
+
 /*
 // DELETE remove user (only for development as users will be static and probably will not change often)
 const remove = (req, res) => {
@@ -235,5 +240,5 @@ const remove = (req, res) => {
     });
 };*/
 
-module.exports = { getAll, getOne, create, login, resetPassword };
+module.exports = { getAll, getOne, create, login, resetPassword, authenticate };
 

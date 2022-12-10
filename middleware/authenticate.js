@@ -27,8 +27,9 @@ module.exports = (req, res, next) => {
                 res.status(401).json({ status: "failed", message: "You are not authorized to perform this action." });
             }
 
-            // If the user exists, attach the user to the request object
-            // req.user = user;
+            if(!user) {
+                res.status(401).json({ status: "failed", message: "You are not authorized to perform this action." });
+            }
         });
     });
     
