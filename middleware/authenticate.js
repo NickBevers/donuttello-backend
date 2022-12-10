@@ -1,4 +1,5 @@
 // Define imports
+const User = require('../models/User');
 const jwt = require("jsonwebtoken");
 
 // Create a middleware function to check if the user is authenticated (has the correct token and email)
@@ -20,8 +21,15 @@ module.exports = (req, res, next) => {
             res.status(401).json({ status: "failed", message: "You are not authorized to perform this action." });
         }
 
-        // If the token is valid, add the decoded token to the request object
-        req.userData = decoded;
+        // If the token is valid, check if the user exists in the database
+        User.findOne({ email: decoded.email }, (err, user) => {
+            if (err) {
+                res.status(401).json({ status: "failed", message: "You are not authorized to perform this action." });
+            }
+
+            // If the user exists, attach the user to the request object
+            // req.user = user;
+        });
     });
     
     // Call next() to continue with the request
