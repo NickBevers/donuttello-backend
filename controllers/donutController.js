@@ -44,9 +44,9 @@ const getAll = (req, res, next) => {
 
     Donut.find(filter, { __v: 0 }, (err, donuts) => {
         if (err) {
-            res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
+            return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
         }
-        res.status(200).json({ status: "success", message: "Got all donuts.", data: donuts, donutCount: donuts.length });
+        return res.status(200).json({ status: "success", message: "Got all donuts.", data: donuts, donutCount: donuts.length });
     }).select('-__v').sort(sortBy);
 };
 
@@ -56,9 +56,9 @@ const getOne = (req, res, next) => {
     Donut.findById((req.params.id), {__v: 0}, (err, donut) => {
         console.log(donut);
         if (err) {
-            res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
+            return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
         }
-        res.status(200).json({ status: "success", message: `Got data for donut ${req.params.id}.`, data: donut, donutCount: donut.length });
+        return res.status(200).json({ status: "success", message: `Got data for donut ${req.params.id}.`, data: donut, donutCount: donut.length });
     });
 };
 
@@ -66,11 +66,11 @@ const getOne = (req, res, next) => {
 const create = (req, res, next) => {
     Donut.create(req.body, (err, donut) => {
         if (err) {
-            res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
+            return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
         }
         
         // Send the new donut back to the client with the url to get the donut data
-        res.status(200).json({ status: "success", message: `You created a donut called ${donut.name}.`, data: donut, donutCount: donut.length, url: `${req.protocol}://${req.get('host')}${req.baseUrl}/${donut._id}` });
+        return res.status(200).json({ status: "success", message: `You created a donut called ${donut.name}.`, data: donut, donutCount: donut.length, url: `${req.protocol}://${req.get('host')}${req.baseUrl}/${donut._id}` });
     });
 };
 
@@ -78,9 +78,9 @@ const create = (req, res, next) => {
 const update = (req, res, next) => {
     Donut.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, donut) => {
         if (err) {
-            res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
+            return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
         }
-        res.status(200).json({ status: "success", message: `Updated data for donut ${req.params.id}.`, data: donut, donutCount: donut.length });
+        return res.status(200).json({ status: "success", message: `Updated data for donut ${req.params.id}.`, data: donut, donutCount: donut.length });
     });
 }
 
@@ -88,9 +88,9 @@ const update = (req, res, next) => {
 const updateStatus = (req, res, next) => {
     Donut.findByIdAndUpdate(req.params.id, { orderStatus: req.body.orderStatus }, { new: true }, (err, donut) => {
         if (err) {
-            res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
+            return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
         }
-        res.status(200).json({ status: "success", message: `Updated data for donut ${req.params.id}.`, data: donut, donutCount: donut.length });
+        return res.status(200).json({ status: "success", message: `Updated data for donut ${req.params.id}.`, data: donut, donutCount: donut.length });
     });
 }
 
@@ -98,9 +98,9 @@ const updateStatus = (req, res, next) => {
 const remove = (req, res, next) => {
     Donut.findByIdAndDelete(req.params.id, (err, donut) => {
         if (err) {
-            res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
+            return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
         }
-        res.status(200).json({ status: "success", message: `Donut ${req.params.id} has been removed from our database.`, data: donut, donutCount: donut.length });
+        return res.status(200).json({ status: "success", message: `Donut ${req.params.id} has been removed from our database.`, data: donut, donutCount: donut.length });
     });
 }
 
