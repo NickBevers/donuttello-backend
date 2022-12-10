@@ -24,14 +24,17 @@ const getAll = (req, res, next) => {
         case "all":
             filter = {};
             break;
-        case "order":
-            filter = { isOrder: true };
+        case "ordered":
+            filter = { orderStatus: "ordered" };
             break;
-        case "notOrder":
-            filter = { isOrder: false };
+        case "inProduction":
+            filter = { orderStatus: "production" };
+            break;
+        case "produced":
+            filter = { orderStatus: "produced" };
             break;
         default:
-            filter = { isOrder: true };
+            filter = {};
     }
 
     // set the sorting method based on the query parameter 'sort', default is $natural (which is the order in which the donuts were created)
@@ -49,13 +52,14 @@ const getAll = (req, res, next) => {
 
 // Get a single donut by id
 const getOne = (req, res, next) => {
+    // check if param exists
     Donut.findById((req.params.id), {__v: 0}, (err, donut) => {
         console.log(donut);
         if (err) {
             res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
         }
         res.status(200).json({ status: "success", message: `Got data for donut ${req.params.id}.`, data: donut, donutCount: donut.length });
-    }).select('-__v');
+    });
 };
 
 // Create a new donut (no need to initiatie a new donut object, just call create on the model with the body of the request)
@@ -67,7 +71,7 @@ const create = (req, res, next) => {
         
         // Send the new donut back to the client with the url to get the donut data
         res.status(200).json({ status: "success", message: `You created a donut called ${donut.name}.`, data: donut, donutCount: donut.length, url: `${req.protocol}://${req.get('host')}${req.baseUrl}/${donut._id}` });
-    }).select('-__v');
+    });
 };
 
 // Update a donut by id
@@ -77,7 +81,17 @@ const update = (req, res, next) => {
             res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
         }
         res.status(200).json({ status: "success", message: `Updated data for donut ${req.params.id}.`, data: donut, donutCount: donut.length });
-    }).select('-__v');
+    });
+}
+
+// Update a donut by id
+const updateStatus = (req, res, next) => {
+    Donut.findByIdAndUpdate(req.params.id, { orderStatus: req.body.orderStatus }, { new: true }, (err, donut) => {
+        if (err) {
+            res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
+        }
+        res.status(200).json({ status: "success", message: `Updated data for donut ${req.params.id}.`, data: donut, donutCount: donut.length });
+    });
 }
 
 // Delete a donut by id
@@ -87,7 +101,7 @@ const remove = (req, res, next) => {
             res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", error: err });
         }
         res.status(200).json({ status: "success", message: `Donut ${req.params.id} has been removed from our database.`, data: donut, donutCount: donut.length });
-    }).select('-__v');
+    });
 }
 
-module.exports = { getAll, getOne, create, update, remove }
+module.exports = { getAll, getOne, create, update, updateStatus, remove }

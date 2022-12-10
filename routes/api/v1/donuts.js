@@ -13,8 +13,11 @@ router.get('/:id', donutController.getOne);
 // POST a new donut
 router.post('/', donutController.create);
 
-// PUT (update) a donut
+// PUT (update) a donut with new attributes
 router.put('/:id', donutController.update);
+
+// PUT (update) a donut's status
+router.put('/status/:id', authenticate, donutController.updateStatus);
 
 // DELETE a donut (only for admin with correct token)
 router.delete('/:id', authenticate, donutController.remove);

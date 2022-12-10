@@ -3,15 +3,16 @@ const mongoose = require('mongoose');
 
 // Define schema (what properties does a donut order have?)
 const donutSchema = new mongoose.Schema({
-    base: {type: String, required: true},
-    frosting: {type: String, required: true},
-    toppings: {type: String, required: true},
+    glaze: {type: String, default: "", required: true},
+    filling: {type: String, default: "", required: true},
+    topping1: {type: String, default: "", required: true},
+    topping2: {type: String, default: "", required: true},
+    logo: {type: String, default: "", required: false},
     name: {type: String, required: false},
     company: {type: String, required: true},
     email: {type: String, required: true},
-    hasBeenProduced: { type: Boolean, default: false, required: false },
-    isOrder: { type: Boolean, default: true, required: true },
-    votes: { type: Number, default: 0, required: false },
+    phone: {type: String, required: true},
+    orderStatus: { type: String, default: "ordered", required: true },
     dateCreated: { type: Date, default: Date.now, required: false }
 })
 
