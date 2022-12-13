@@ -18,17 +18,17 @@ module.exports = (req, res, next) => {
     // Verify the token with built in jwt.verify() method 
     jwt.verify(jwtToken, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
-            res.status(401).json({ status: "failed", message: "You are not authorized to perform this action." });
+            return res.status(401).json({ status: "failed", message: "You are not authorized to perform this action." });
         }
 
         // If the token is valid, check if the user exists in the database
         User.findOne({ email: decoded.email }, (err, user) => {
             if (err) {
-                res.status(401).json({ status: "failed", message: "You are not authorized to perform this action." });
+                return res.status(401).json({ status: "failed", message: "You are not authorized to perform this action." });
             }
 
             if(!user) {
-                res.status(401).json({ status: "failed", message: "You are not authorized to perform this action." });
+                return res.status(401).json({ status: "failed", message: "You are not authorized to perform this action." });
             }
         });
     });
