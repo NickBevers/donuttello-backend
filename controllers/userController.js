@@ -149,6 +149,7 @@ const resetPassword = (req, res) => {
 
     // Check if all fields are filled in
     if (!email || !passwordOld || !passwordNew) {
+        console.log("no email or password");
         return res.status(404).json({ status: "failed", message: "Please fill in all the fields.", devMessage: " This route requires email and password" });
     }
 
@@ -156,6 +157,7 @@ const resetPassword = (req, res) => {
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         // If there is an error, return the error
         if (err) {
+            console.log("token error");
             return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong verifying the token", error: err });
         }
 
@@ -163,11 +165,13 @@ const resetPassword = (req, res) => {
         User.findOne({ email: decoded.email }, { _id: 0, date: 0 }, (err, user) => {
             // If there is an error, return the error
             if (err) {
+                console.log("user error");
                 return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong looking for the user in the database (reset password error)", error: err });
             }
 
             // If there is no user, return a message
             if (!user) {
+                console.log("no user");
                 return res.status(404).json({ status: "failed", message: "This email is not registered yet.", devMessage: "This email is not registered. or you're usig the wrong email" });
             }
             
@@ -175,6 +179,7 @@ const resetPassword = (req, res) => {
             bcrypt.compare(passwordOld, user.password, (err, isMatch) => {
                 // If there is an error, return the error
                 if (err) {
+                    console.log("password error");
                     return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong comparing the password", error: err });
                 }
 
@@ -183,6 +188,7 @@ const resetPassword = (req, res) => {
                     bcrypt.genSalt(10, (err, salt) => {
                         // If there is an error, return the error
                         if (err) {
+                            console.log("salt error");
                             return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong generating the salt", error: err });
                         }
 
@@ -190,6 +196,7 @@ const resetPassword = (req, res) => {
                         bcrypt.hash(passwordNew, salt, (err, hash) => {
                             // If there is an error, return the error
                             if (err) {
+                                console.log("hash error");
                                 return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong hashing the password", error: err });
                             }
 
@@ -197,15 +204,18 @@ const resetPassword = (req, res) => {
                             User.updateOne({ email: decoded.email }, { $set: { password: hash } }, (err, user) => {
                                 // If there is an error, return the error
                                 if (err) {
+                                    console.log("update error");
                                     return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong updating the password", error: err });
                                 }
 
                                 // If there is no user, return a message
                                 if (!user) {
+                                    console.log("no user");
                                     return res.status(404).json({ status: "failed", message: "This email is not registered yet.", devMessage: "This email is not registered. or you're usig the wrong email" });
                                 }
 
                                 // Return a message
+                                console.log("password updated");
                                 return res.status(200).json({ status: "success", message: "Password updated successfully.", data: user });
                             });
                         });
