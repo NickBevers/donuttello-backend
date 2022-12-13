@@ -70,7 +70,7 @@ const create = (req, res, next) => {
         }
         
         // Send the new donut back to the client with the url to get the donut data
-        return res.status(200).json({ status: "success", message: `You created a donut called ${donut.name}.`, data: donut, donutCount: donut.length, url: `${req.protocol}://${req.get('host')}${req.baseUrl}/${donut._id}` });
+        return res.status(200).json({ status: "success", message: `You created a donut called ${donut.name}.`, data: donut, donutCount: donut.length, url: donut._id });
     });
 };
 
