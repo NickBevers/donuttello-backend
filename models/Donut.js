@@ -13,6 +13,7 @@ const donutSchema = new mongoose.Schema({
     company: { type: String, required: true },
     email: { type: String, required: true },
     phone: { type: String, required: true },
+    amount: { type: Number, default: 1, required: true },
     comment: { type: String, default: "", required: false },
     orderStatus: { type: String, default: "ordered", required: false },
     dateCreated: { type: Date, default: Date.now, required: false }
