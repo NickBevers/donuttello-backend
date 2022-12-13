@@ -142,6 +142,9 @@ const login = (req, res) => {
 // PUT update user (admin panel/section only)
 const resetPassword = (req, res) => {
     const { email, passwordOld, passwordNew } = req.body;
+    if (!req.headers.authorization) {
+        return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "No token provided" });
+    }
     const token = req.headers.authorization.split(" ")[1];
 
     // Check if all fields are filled in
