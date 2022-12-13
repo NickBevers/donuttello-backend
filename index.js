@@ -19,6 +19,20 @@ const indexRouter = require('./routes/index');
 
 // Setup extra settings for express
 app.use(cors());
+
+app.use((req, res, next) => {
+    const corsWhitelist = [
+        'https://donuttello-frontend-r0702962-thomasmoreb.vercel.app',
+        'https://donuttello-frontend.vercel.app/',
+    ];
+    if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    }
+
+    next();
+});
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
