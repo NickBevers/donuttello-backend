@@ -139,89 +139,69 @@ const login = (req, res) => {
 };
 
 
-// PUT update user (admin panel/section only)
+// POST update user (admin panel/section only)
 const resetPassword = (req, res) => {
     const { email, passwordOld, passwordNew } = req.body;
-    if (!req.headers.authorization) {
-        return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "No token provided" });
-    }
-    const token = req.headers.authorization.split(" ")[1];
 
     // Check if all fields are filled in
     if (!email || !passwordOld || !passwordNew) {
-        console.log("no email or password");
         return res.status(404).json({ status: "failed", message: "Please fill in all the fields.", devMessage: " This route requires email and password" });
     }
 
-    // Check if the token is valid
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    // Get the user with the email
+    User.findOne({ email: email }, { _id: 0, date: 0 }, (err, user) => {
         // If there is an error, return the error
         if (err) {
-            console.log("token error");
-            return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong verifying the token", error: err });
+            return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong looking for the user in the database (reset password error)", error: err });
         }
-
-        // Get the user with the email
-        User.findOne({ email: decoded.email }, { _id: 0, date: 0 }, (err, user) => {
+        
+        // If there is no user, return a message
+        if (!user) {
+            return res.status(404).json({ status: "failed", message: "This email is not registered yet.", devMessage: "This email is not registered. or you're usig the wrong email" });
+        }
+        
+        // compare the password with the password in the database
+        bcrypt.compare(passwordOld, user.password, (err, isMatch) => {
             // If there is an error, return the error
             if (err) {
-                console.log("user error");
-                return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong looking for the user in the database (reset password error)", error: err });
-            }
-
-            // If there is no user, return a message
-            if (!user) {
-                console.log("no user");
-                return res.status(404).json({ status: "failed", message: "This email is not registered yet.", devMessage: "This email is not registered. or you're usig the wrong email" });
+                return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong comparing the password", error: err });
             }
             
-            // compare the password with the password in the database
-            bcrypt.compare(passwordOld, user.password, (err, isMatch) => {
-                // If there is an error, return the error
-                if (err) {
-                    console.log("password error");
-                    return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong comparing the password", error: err });
-                }
+            // If the password is correct, create a token and return a message
+            if (isMatch) {
+                bcrypt.genSalt(10, (err, salt) => {
+                    // If there is an error, return the error
+                    if (err) {
+                        return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong generating the salt", error: err });
+                    }
 
-                // If the password is correct, create a token and return a message
-                if (isMatch) {
-                    bcrypt.genSalt(10, (err, salt) => {
+                    // Hash the password
+                    bcrypt.hash(passwordNew, salt, (err, hash) => {
                         // If there is an error, return the error
                         if (err) {
-                            console.log("salt error");
-                            return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong generating the salt", error: err });
+                            return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong hashing the password", error: err });
                         }
 
-                        // Hash the password
-                        bcrypt.hash(passwordNew, salt, (err, hash) => {
+                        // Set the password to the hashed password
+                        User.updateOne({ email: decoded.email }, { $set: { password: hash } }, (err, user) => {
                             // If there is an error, return the error
                             if (err) {
-                                console.log("hash error");
-                                return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong hashing the password", error: err });
+                                return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong updating the password", error: err });
                             }
 
-                            // Set the password to the hashed password
-                            User.updateOne({ email: decoded.email }, { $set: { password: hash } }, (err, user) => {
-                                // If there is an error, return the error
-                                if (err) {
-                                    console.log("update error");
-                                    return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong updating the password", error: err });
-                                }
+                            // If there is no user, return a message
+                            if (!user) {
+                                return res.status(404).json({ status: "failed", message: "This email is not registered yet.", devMessage: "This email is not registered. or you're usig the wrong email" });
+                            }
 
-                                // If there is no user, return a message
-                                if (!user) {
-                                    console.log("no user");
-                                    return res.status(404).json({ status: "failed", message: "This email is not registered yet.", devMessage: "This email is not registered. or you're usig the wrong email" });
-                                }
-
-                                // Return a message
-                                console.log("password updated");
-                                return res.status(200).json({ status: "success", message: "Password updated successfully.", data: user });
-                            });
+                            // Return a message
+                            return res.status(200).json({ status: "success", message: "Password updated successfully.", data: user });
                         });
                     });
-                }
-            });
+                });
+            } else {
+                return res.status(404).json({ status: "failed", message: "This password does not match the one in the database, please try again.", devMessage: "Password the user gave is incorrect." });
+            }
         });
     });
 };
