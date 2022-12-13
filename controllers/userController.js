@@ -183,7 +183,7 @@ const resetPassword = (req, res) => {
                         }
 
                         // Set the password to the hashed password
-                        User.updateOne({ email: decoded.email }, { $set: { password: hash } }, (err, user) => {
+                        User.updateOne({ email: email }, { $set: { password: hash } }, (err, user) => {
                             // If there is an error, return the error
                             if (err) {
                                 return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong updating the password", error: err });
