@@ -117,7 +117,7 @@ const login = (req, res) => {
 
         // If there is no user, return a message
         if (!user) {
-            return res.status(400).json({ status: "failed", message: "This username is not registered yet.", devMessage: "This username is not registered. or you're usig the wrong email" });
+            return res.status(400).json({ status: "failed", message: "Your username or password was incorrect.", devMessage: "This username is not registered. or you're usig the wrong email" });
         }
 
         // Check if the password is correct
