@@ -148,6 +148,12 @@ const resetPassword = (req, res) => {
         return res.status(404).json({ status: "failed", message: "Please fill in all the fields.", devMessage: " This route requires email and password" });
     }
 
+    const jwtToken = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(jwtToken, process.env.JWT_SECRET);
+    if (decoded.email !== email) {
+        return res.status(404).json({ status: "failed", message: "You're not allowed to change this user's password." });
+    }
+
     // Get the user with the email
     User.findOne({ email: email }, { _id: 0, date: 0 }, (err, user) => {
         // If there is an error, return the error

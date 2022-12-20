@@ -39,8 +39,8 @@ const getAll = (req, res, next) => {
 
     // set the sorting method based on the query parameter 'sort', default is $natural (which is the order in which the donuts were created)
     sortingMethod ? sortBy[sortingMethod] = sortingOrder : sortBy = { $natural: sortingOrder };
-    console.log(sortBy);
-    console.log(filter);
+    // console.log(sortBy);
+    // console.log(filter);
 
     Donut.find(filter, { __v: 0 }, (err, donuts) => {
         if (err) {
