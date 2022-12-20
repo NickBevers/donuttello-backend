@@ -163,7 +163,7 @@ const resetPassword = (req, res) => {
         
         // If there is no user, return a message
         if (!user) {
-            return res.status(404).json({ status: "failed", message: "This email is not registered yet.", devMessage: "This email is not registered. or you're usig the wrong email" });
+            return res.status(404).json({ status: "failed", message: "Your username or password were incorrect.", devMessage: "This email is not registered. or you're usig the wrong email" });
         }
         
         // compare the password with the password in the database
@@ -197,7 +197,7 @@ const resetPassword = (req, res) => {
 
                             // If there is no user, return a message
                             if (!user) {
-                                return res.status(404).json({ status: "failed", message: "This email is not registered yet.", devMessage: "This email is not registered. or you're usig the wrong email" });
+                                return res.status(404).json({ status: "failed", message: "Your email or password were wrong.", devMessage: "This email is not registered. or you're usig the wrong email" });
                             }
 
                             // Return a message
