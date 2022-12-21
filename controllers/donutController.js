@@ -28,7 +28,7 @@ const getAll = (req, res, next) => {
             filter = { orderStatus: "ordered" };
             break;
         case "inProduction":
-            filter = { orderStatus: "production" };
+            filter = { orderStatus: "inProduction" };
             break;
         case "produced":
             filter = { orderStatus: "produced" };
