@@ -117,7 +117,7 @@ const login = (req, res) => {
 
         // If there is no user, return a message
         if (!user) {
-            return res.status(400).json({ status: "failed", message: "This username is not registered yet.", devMessage: "This username is not registered. or you're usig the wrong email" });
+            return res.status(400).json({ status: "failed", message: "Your username or password was incorrect.", devMessage: "This username is not registered. or you're usig the wrong email" });
         }
 
         // Check if the password is correct
@@ -148,6 +148,12 @@ const resetPassword = (req, res) => {
         return res.status(404).json({ status: "failed", message: "Please fill in all the fields.", devMessage: " This route requires email and password" });
     }
 
+    const jwtToken = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(jwtToken, process.env.JWT_SECRET);
+    if (decoded.email !== email) {
+        return res.status(404).json({ status: "failed", message: "You're not allowed to change this user's password." });
+    }
+
     // Get the user with the email
     User.findOne({ email: email }, { _id: 0, date: 0 }, (err, user) => {
         // If there is an error, return the error
@@ -157,7 +163,7 @@ const resetPassword = (req, res) => {
         
         // If there is no user, return a message
         if (!user) {
-            return res.status(404).json({ status: "failed", message: "This email is not registered yet.", devMessage: "This email is not registered. or you're usig the wrong email" });
+            return res.status(404).json({ status: "failed", message: "Your username or password were incorrect.", devMessage: "This email is not registered. or you're usig the wrong email" });
         }
         
         // compare the password with the password in the database
@@ -183,7 +189,7 @@ const resetPassword = (req, res) => {
                         }
 
                         // Set the password to the hashed password
-                        User.updateOne({ email: decoded.email }, { $set: { password: hash } }, (err, user) => {
+                        User.updateOne({ email: email }, { $set: { password: hash } }, (err, user) => {
                             // If there is an error, return the error
                             if (err) {
                                 return res.status(404).json({ status: "failed", message: "Something has gone wrong, please try again.", devMessage: "Something went wrong updating the password", error: err });
@@ -191,7 +197,7 @@ const resetPassword = (req, res) => {
 
                             // If there is no user, return a message
                             if (!user) {
-                                return res.status(404).json({ status: "failed", message: "This email is not registered yet.", devMessage: "This email is not registered. or you're usig the wrong email" });
+                                return res.status(404).json({ status: "failed", message: "Your email or password were wrong.", devMessage: "This email is not registered. or you're usig the wrong email" });
                             }
 
                             // Return a message

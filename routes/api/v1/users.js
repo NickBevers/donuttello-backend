@@ -5,9 +5,9 @@ const userController = require('../../../controllers/userController');
 const authenticate = require('../../../middleware/authenticate');
 
 /* GET users listing. */
-router.get('/', userController.getAll);
+// router.get('/', userController.getAll);
 router.get('/auth', authenticate, userController.authenticate);
-router.get('/:id', userController.getOne);
+// router.get('/:id', userController.getOne);
 
 /* POST register and login */
 // router.post('/register', userController.create); // ← This is the route for rehistering a new user (temp route only for dev purposes)

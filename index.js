@@ -18,7 +18,7 @@ const indexRouter = require('./routes/index');
 
 
 // Setup extra settings for express
-app.use(cors());
+app.use(cors({origin: true}));
 
 app.use((req, res, next) => {
     const corsWhitelist = [
